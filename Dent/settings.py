@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG =  os.environ.get("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS")
 
 
 
@@ -88,7 +88,7 @@ DATABASES = {
 database_url= os.environ.get("DATABASE_URL")
 DATABASES['default'] = dj_database_url.parse(database_url)
 
-
+DATABASES['default']['ENGINE'] = 'django_postgrespool'
 
 
 
@@ -132,10 +132,15 @@ STATICFILES_DIR = [
 ]
 
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = BASE_DIR / "staticfiles"
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-
+STORAGES = {
+    # ...
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 #Email settings
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
